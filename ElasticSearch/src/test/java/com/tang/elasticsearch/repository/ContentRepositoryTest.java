@@ -14,6 +14,7 @@ import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.junit.Test;
@@ -216,6 +217,12 @@ public class ContentRepositoryTest {
 				});
 				return null;
 			}
+
+			@Override
+			public <T> T mapSearchHit(SearchHit searchHit, Class<T> type) {
+				// TODO Auto-generated method stub
+				return null;
+			}
 		});
 		
 	}
@@ -227,7 +234,7 @@ public class ContentRepositoryTest {
 	 */
 	@Test
 	public void testSaveAll() {
-		ArrayList<Content> list = Lists.list(new Content("2", "林冲", "十万禁军教头", "施耐庵", 2),
+		ArrayList<Content> list = (ArrayList<Content>) Lists.list(new Content("2", "林冲", "十万禁军教头", "施耐庵", 2),
 								  new Content("3", "扈三娘", "三打祝家庄", "施耐庵", 3)
 				  );
 	    contentRepository.saveAll(list);
