@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+.ui {
+	width: 700px;
+	height: 50px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.ui li {
+	width: 70px;
+	margin: 0 10px;
+	float: left; /*该处换为display:inline-block;同样效果*/
+}
+
+.ui li a {
+	width: 70px;
+	height: 50px;
+	padding: 0 20px;
+	font-size: 12px;
+	line-height: 50px;
+	background: green;
+	display: inline-block;
+}
+</style>
+</head>
+<body style="text-align: -webkit-center;">
+	<br/>
+	<br/>
+	<form id="searchForm" action="search" method="get" onsubmit="return checkSubmit()">
+		<input type="text" name="keyword" th:value="${keyword}">
+		<input type="hidden" id="pageNum" name="pageNum" value="1">
+		<input type="hidden" id="fq" name="fq">
+		<input type="submit" value="搜索"/>		
+	</form>
+	<br/>
+	<br/>
+	<div>
+	<table>
+		<tr><th>分类</th></tr>
+		<tr th:each=" category: ${categorys}">
+			<td><a th:href="'javascript:categoryClick(\''+${category}+'\')'" th:text="${category}"></a></td>
+		</tr>
+	</table>
+	</div>
+	<div>
+	<h1>产品列表</h1>
+	<br/>
+	<br/>
+	<br/>
+	<table>
+		<tr>
+			<th>编号</th>
+			<th>名称</th>
+			<th>价钱</th>
+			<th>图片地址</th>
+		</tr>
+		<tr th:each="prod : ${pages.getContent()}">
+			<td th:text="${prod.id}">id</td>
+			<td th:utext="${prod.pName}">Onions</td>
+			<td th:text="${prod.price}">2.41</td>
+			<td th:text="${prod.picture}">picture</td>
+		</tr>
+	</table>
+	<br/>
+	<br/>
+	<br/>
+	</div>
+	<p>
+	总条数:<span th:text="${pages.getTotalElements()}"></span>,
+	总页数:<span th:text="${pages.getTotalPages()}"></span>,
+	每页大小:<span th:text="${pages.getSize()}"></span>,
+	当前页:<span th:text="${pages.getNumber()+1}"></span>
+	<button th:onclick="'javascript:page('+${pages.hasPrevious()?pages.getNumber():pages.getNumber()+1}+')'">上一页</button>
+	<input id="goPage" style="width: 30px;" type="text"> <button onclick="page(document.getElementById('goPage').value)" >跳转</button>
+	<button th:onclick="'javascript:page('+${pages.hasNext()?pages.getNumber()+2:pages.getNumber()+1}+')'">下一页</button>
+	</p>
+</body>
+<script type="text/javascript">
+	function checkSubmit(){
+		return true;
+	}
+	function page(page){
+		document.getElementById("pageNum").value = page;
+		document.getElementById("searchForm").submit();
+	}
+	function categoryClick(category){
+		document.getElementById("fq").value = category;
+		document.getElementById("searchForm").submit();
+	}
+</script>
+</html>
