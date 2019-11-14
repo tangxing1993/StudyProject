@@ -6,11 +6,10 @@
 	<parent>
 		<groupId>com.tang</groupId>
 		<artifactId>StudyProject</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.tang</groupId>
 	<artifactId>ElasticSearch</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>ElasticSearch</name>
 	<description>ElasticSearch Demo</description>
 
