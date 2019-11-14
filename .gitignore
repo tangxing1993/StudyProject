@@ -1,0 +1,57 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**
+!**/src/test/**
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+
+### VS Code ###
+.vscode/
+/ElasticSearch/.mvn/wrapper/MavenWrapperDownloader.java
+/ElasticSearch/.mvn/wrapper/maven-wrapper.jar
+/ElasticSearch/.mvn/wrapper/maven-wrapper.jar
+/ElasticSearch/.mvn/wrapper/maven-wrapper.properties
+/ElasticSearch/mvnw
+/ElasticSearch/mvnw.cmd
+/ElasticSearch/.mvn/wrapper/maven-wrapper.jar
+/ElasticSearch/.mvn/wrapper
+/lucene/.mvn/wrapper/MavenWrapperDownloader.java
+/lucene/.mvn/wrapper/maven-wrapper.jar
+/lucene/.mvn/wrapper/maven-wrapper.properties
+/lucene/mvnw
+/lucene/mvnw.cmd
+/lucene/.mvn/wrapper
+/netty/.mvn/wrapper/MavenWrapperDownloader.java
+/netty/.mvn/wrapper/maven-wrapper.jar
+/netty/.mvn/wrapper/maven-wrapper.properties
+/netty/mvnw
+/netty/mvnw.cmd
+/netty/.mvn/wrapper
+/solr/.mvn/wrapper/MavenWrapperDownloader.java
+/solr/.mvn/wrapper/maven-wrapper.jar
+/solr/.mvn/wrapper/maven-wrapper.properties
+/solr/mvnw
+/solr/mvnw.cmd
+/solr/.mvn/wrapper
