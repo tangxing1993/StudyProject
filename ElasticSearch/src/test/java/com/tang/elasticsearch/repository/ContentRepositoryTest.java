@@ -220,7 +220,6 @@ public class ContentRepositoryTest {
 
 			@Override
 			public <T> T mapSearchHit(SearchHit searchHit, Class<T> type) {
-				// TODO Auto-generated method stub
 				return null;
 			}
 		});
