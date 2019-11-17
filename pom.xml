@@ -22,5 +22,6 @@
 		<module>lucene</module>
 		<module>solr</module>
 		<module>ElasticSearch</module>
+		<module>Activiti</module>
 	</modules>
 </project>
