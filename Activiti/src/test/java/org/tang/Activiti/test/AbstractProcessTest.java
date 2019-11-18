@@ -27,7 +27,7 @@ public abstract class AbstractProcessTest {
 	public void before() {
 		ProcessEngineConfiguration configuration = ProcessEngineConfiguration.createStandaloneProcessEngineConfiguration();
 		// 设置参数
-		configuration.setJdbcUrl("jdbc:mysql://192.168.2.45:33060/process_engine?useSSl=false&useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false");
+		configuration.setJdbcUrl("jdbc:mysql://192.168.1.18:3306/process_engine?useSSl=false&useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false");
 		configuration.setJdbcDriver("com.mysql.jdbc.Driver");
 		configuration.setJdbcUsername("root");
 		configuration.setJdbcPassword("123456");
