@@ -9,5 +9,12 @@ import org.tang.activiti.demo.domain.Employee;
  * @desc   <p> 雇员的数据层接口 </p>
  */
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
-
+	/**
+	 * 
+	 * @date 2019年11月20日
+	 * @desc <p> </p>
+	 * @param name
+	 * @return
+	 */
+	Employee getOneByName(String name);
 }
