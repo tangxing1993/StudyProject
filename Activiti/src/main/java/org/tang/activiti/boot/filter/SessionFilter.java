@@ -7,6 +7,11 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.util.StringUtils;
+import org.tang.activiti.demo.util.SessionContext;
 /**
  * 
  * @date   2019年11月20日
@@ -23,9 +28,15 @@ public class SessionFilter extends HttpFilter{
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		// TODO 校验session
-		
-		super.doFilter(request, response, chain);
+			String url = ((HttpServletRequest)request).getRequestURI();
+			if(!"/login".equals(url) && !url.contains("/lib/")) {
+				String loginUserName = SessionContext.getLoginUserName();
+				if(StringUtils.isEmpty(loginUserName)) {
+					((HttpServletResponse)response).sendRedirect("/login");
+					return;
+				}
+			}
+			super.doFilter(request, response, chain);
 	}
 	
 }

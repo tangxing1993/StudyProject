@@ -1,4 +1,4 @@
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>部署管理</title>
@@ -31,20 +31,14 @@
 		        <td width="20%" height="20" bgcolor="d3eaef" class="STYLE6"><div align="center"><span class="STYLE10">发布时间</span></div></td>
 		        <td width="10%" height="20" bgcolor="d3eaef" class="STYLE6"><div align="center"><span class="STYLE10">操作</span></div></td>
 		      </tr>
-		      <s:if test="#depList!=null && #depList.size()>0">
-		      	<s:iterator value="#depList">
-		      		<tr>
-				        <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center"><s:property value="id"/></div></td>
-				        <td height="20" bgcolor="#FFFFFF" class="STYLE19"><div align="center"><s:property value="name"/></div></td>
-				        <td height="20" bgcolor="#FFFFFF" class="STYLE19"><div align="center"><s:date name="deploymentTime" format="yyyy-MM-dd HH:mm:ss"/></div></td>
+		      		<tr th:each=" deploy : ${depList}">
+				        <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center">[[${deploy.id}]]</div></td>
+				        <td height="20" bgcolor="#FFFFFF" class="STYLE19"><div align="center">[[${deploy.name}]]</div></td>
+				        <td height="20" bgcolor="#FFFFFF" class="STYLE19"><div align="center">[[${#dates.format(deploy.deploymentTime,"yyyy-MM-dd")}]]</div></td>
 				        <td height="20" bgcolor="#FFFFFF"><div align="center" class="STYLE21">
-				        	<a href="workflow_deploy_delete?deploymentId=<s:property value="id"/>">删除</a>
+				        	<a th:href="@{workflow_deploy_delete(deploymentId=${deploy.id})}">删除</a>
 				        </div></td>
 				    </tr> 
-		      	</s:iterator>
-		      </s:if>
-		        
-		      
 		    </table></td>
 		  </tr>
 		</table>
@@ -81,23 +75,18 @@
 		        <td width="10%" height="20" bgcolor="d3eaef" class="STYLE6"><div align="center"><span class="STYLE10">部署ID</span></div></td>
 		        <td width="10%" height="20" bgcolor="d3eaef" class="STYLE6"><div align="center"><span class="STYLE10">操作</span></div></td>
 		      </tr>
-		      <s:if test="#pdList!=null && #pdList.size()>0">
-		      	<s:iterator value="#pdList">
-		      		<tr>
-				        <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center"><s:property value="id"/></div></td>
-				        <td height="20" bgcolor="#FFFFFF" class="STYLE19"><div align="center"><s:property value="name"/></div></td>
-				        <td height="20" bgcolor="#FFFFFF" class="STYLE19"><div align="center"><s:property value="key"/></div></td>
-				        <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center"><s:property value="version"/></div></td>
-				        <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center"><s:property value="resourceName"/></div></td>
-				        <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center"><s:property value="diagramResourceName"/></div></td>
-				        <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center"><s:property value="deploymentId"/></div></td>
+		      		<tr th:each=" processDefination : ${pdList} ">
+				        <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center">[[ ${processDefination.id} ]]</div></td>
+				        <td height="20" bgcolor="#FFFFFF" class="STYLE19"><div align="center">[[ ${processDefination.name} ]]</div></td>
+				        <td height="20" bgcolor="#FFFFFF" class="STYLE19"><div align="center">[[ ${processDefination.key} ]]</div></td>
+				        <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center">[[ ${processDefination.version} ]]</div></td>
+				        <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center">[[ ${processDefination.resourceName} ]]</div></td>
+				        <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center">[[ ${processDefination.diagramResourceName} ]]</div></td>
+				        <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center">[[ ${processDefination.deploymentId} ]]</div></td>
 				        <td height="20" bgcolor="#FFFFFF"><div align="center" class="STYLE21">
-				        	<a target="_blank" href="workflowAction_viewImage.action?deploymentId=<s:property value="deploymentId"/>&imageName=<s:property value="diagramResourceName"/>">查看流程图</a> 
+				        	<a target="_blank" th:href="@{workflow_viewImage(processDefinitionId=${processDefination.id})}">查看流程图</a> 
 					 	</div></td>
 				    </tr> 
-		      	</s:iterator>
-		      </s:if>
-		        
 		      
 		    </table></td>
 		  </tr>
@@ -105,7 +94,7 @@
 	<hr>
 	<br/>
 	<!-- 发布流程 -->
-	<form action="workflowAction_newdeploy.action" enctype="multipart/form-data" method="POST">
+	<form th:action="@{workflow_upload}" th:object="${workflow}" enctype="multipart/form-data" method="POST">
 		<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
 		  <tr>
 		    <td height="30"><table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -128,8 +117,8 @@
 		  <tr>
 		    <td>
 		    	<div align="left" class="STYLE21">
-					流程名称：<s:textfield name="filename" cssStyle="width: 200px;"/><br/>
-					流程文件:<s:file name="file" cssStyle="width: 200px;"/><br/>
+					流程名称：<input th:field="*{imageName}" style="width: 200px;"> <br/>
+					流程文件: <input type="file" th:field="*{file}" style="width: 200px;"/> <br/>
 					<input type="submit" value="上传流程" class="button_ok"/>
 				</div>
 		    </td>

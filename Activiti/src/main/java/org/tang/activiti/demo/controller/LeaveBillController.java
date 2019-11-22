@@ -1,7 +1,18 @@
 package org.tang.activiti.demo.controller;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
+import org.tang.activiti.demo.domain.Employee;
+import org.tang.activiti.demo.domain.LeaveBill;
+import org.tang.activiti.demo.service.EmployeeService;
+import org.tang.activiti.demo.service.LeaveBillService;
+import org.tang.activiti.demo.util.SessionContext;
 
 /**
  * 
@@ -12,6 +23,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class LeaveBillController {
 
+	@Autowired
+	private LeaveBillService leaveBillService;
+	@Autowired
+	private EmployeeService employeeService;
+	
 	/**
 	 * 
 	 * @date 2019年11月20日
@@ -19,9 +35,11 @@ public class LeaveBillController {
 	 * @return
 	 */
 	@GetMapping("leaveBill_list")
-	public String listView() {
-		
-		return "views/leaveBill/list.html";
+	public ModelAndView listView(ModelAndView mv) {
+		mv.setViewName("views/leaveBill/list.html");
+		List<LeaveBill> leaveBills = leaveBillService.listCurrentUserLeaveBill();
+		mv.addObject("leaveBills", leaveBills);
+		return mv;
 	}
 	
 	/**
@@ -31,9 +49,25 @@ public class LeaveBillController {
 	 * @return
 	 */
 	@GetMapping("leaveBill_input")
-	public String inputView() {
-		
-		return "views/leaveBill/input.html";
+	public ModelAndView inputView(ModelAndView mv) {
+		LeaveBill leaveBill = new LeaveBill();
+		mv.addObject("leaveBill", leaveBill);
+		mv.setViewName("views/leaveBill/input.html");
+		return mv;
+	}
+	
+	/**
+	 * 
+	 * @date 2019年11月22日
+	 * @desc <p> 保存请假单信息 </p>
+	 * @return
+	 */
+	@PostMapping("leaveBill_save")
+	public String leaveBillSave(LeaveBill leaveBill) {
+		Optional<Employee> optional = employeeService.getOneByName(SessionContext.getLoginUserName());
+		leaveBill.setEmployee(optional.get());
+		leaveBillService.save(leaveBill);
+		return "redirect:/leaveBill_list";
 	}
 	
 	/**

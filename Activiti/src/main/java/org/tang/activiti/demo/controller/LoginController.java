@@ -2,7 +2,6 @@ package org.tang.activiti.demo.controller;
 
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.tang.activiti.demo.domain.Employee;
 import org.tang.activiti.demo.service.EmployeeService;
+import org.tang.activiti.demo.util.SessionContext;
 
 /**
  * 
@@ -24,7 +24,7 @@ import org.tang.activiti.demo.service.EmployeeService;
 @Controller
 public class LoginController {
 
-	public static final String GLOBLE_USER_NAME = "globle_user_name";
+
 	
 	@Autowired
 	private EmployeeService employeeService;
@@ -47,10 +47,10 @@ public class LoginController {
 	 * @return
 	 */
 	@PostMapping("/login")
-	public String login(@Valid @NotNull(message = "用户名不能为空") @RequestParam String name,HttpServletRequest request) {
+	public String login(@Valid @NotNull(message = "用户名不能为空") @RequestParam String name) {
 		Optional<Employee> optional = employeeService.getOneByName(name);
 		optional.ifPresent(employee -> {
-			request.getSession().setAttribute(GLOBLE_USER_NAME, employee.getName());
+			SessionContext.saveLoginUser(employee.getName());
 		});
 		return optional.isPresent() ? "redirect:/index" : "redirect:/login";
 	}
@@ -111,8 +111,8 @@ public class LoginController {
 	 * @return
 	 */
 	@RequestMapping("/logout")
-	public String logout(HttpServletRequest request) {
-		request.getSession().removeAttribute(GLOBLE_USER_NAME);
+	public String logout() {
+		SessionContext.invalidate();
 		return "redirect:/login";
 	}
 }
