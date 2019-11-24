@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.task.Task;
+import org.tang.activiti.demo.domain.LeaveBill;
 
 /**
  * 
@@ -51,5 +53,34 @@ public interface WorkflowService {
 	 * @param deploymentId
 	 */
 	void deleteProcessDefinition(String deploymentId);
+	/**
+	 * 
+	 * @date 2019年11月24日
+	 * @desc <p> 启动请假流程 </p>
+	 */
+	void startLeaveBillProcess(Integer leaveBillId);
+	/**
+	 * 
+	 * @date 2019年11月24日
+	 * @desc <p> 获取用户的任务列表 </p>
+	 * @param loginUserName
+	 */
+	List<Task> listTaskByUserName(String loginUserName);
+	/**
+	 * 
+	 * @date 2019年11月24日
+	 * @desc <p> 通过任务获取请假单信息 </p>
+	 * @param taskId
+	 * @return
+	 */
+	LeaveBill findLeaveBillByTaskId(String taskId);
+	/**
+	 * 
+	 * @date 2019年11月24日
+	 * @desc <p> 获取连线信息 </p>
+	 * @param taskId
+	 * @return
+	 */
+	List<String> findFlowSequenceByTaskId(String taskId);
 	
 }

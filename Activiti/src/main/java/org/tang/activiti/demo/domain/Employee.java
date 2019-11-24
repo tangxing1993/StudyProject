@@ -37,6 +37,11 @@ public class Employee extends AbstractPersistable<Integer>{
 	
 	private String role;
 	
+	@Override
+	public void setId(Integer id) {
+		super.setId(id);
+	}
+
 	// 多对一  使用JoinColumn来指定外键   外键存储在多的一方
 	@ManyToOne(targetEntity = Employee.class)
 	@JoinColumn(name = "manager_id")

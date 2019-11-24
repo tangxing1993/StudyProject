@@ -25,16 +25,16 @@
 		  </tr>
 		  <tr>
 		  	<td>
-		  		<form action="workflowAction_submitTask.action" method="POST">
+		  		<form th:action="@{workflow_submitTask}" th:object="${workflow}" method="POST">
 			  		<div align="left" class="STYLE21">
 			  			<!-- 任务ID -->
 			  			<s:hidden name="taskId"></s:hidden>
 			  			<!-- 请假单ID -->
-			  			<s:hidden name="id"></s:hidden>
-				 		请假天数:<s:textfield name="days" disabled="true" cssStyle="width: 200px;"/><br/>
-				 		请假原因:<s:textfield name="content" disabled="true" cssStyle="width: 800px;"/><br/>
-				 		请假备注:<s:textarea name="remark" disabled="true" cols="30" rows="2"/><br/>
-				 		批&emsp;&emsp;注:<s:textarea name="comment" cols="50" rows="5"/><br/>
+			  			<input type="hidden" disabled="disabled" th:field="${leaveBill.id}">
+				 		请假天数: <input disabled="disabled" th:field="${leaveBill.days}" style="width: 200px;"/><br/>
+				 		请假原因:<input disabled="disabled" th:field="${leaveBill.content}" style="width: 200px;"/><br/>
+				 		请假备注: <textarea rows="2" cols="30" disabled="disabled" th:field="${leaveBill.remark}"></textarea><br/>
+				 		批&emsp;&emsp;注: <textarea rows="5" cols="50" th:field="*{content}"></textarea><br/>
 				 		<!-- 使用连线的名称作为按钮 -->
 				 		<s:if test="#outcomeList!=null && #outcomeList.size()>0">
 				 			<s:iterator value="#outcomeList">

@@ -56,16 +56,16 @@
 			            </td>
 				        <td height="20" bgcolor="#FFFFFF"><div align="center" class="STYLE21" th:switch=" ${leaveBill.state} ">
 				        	<span th:case="'0'">
-				        		<a href="leaveBill_input(id=${leaveBill.id})">修改</a>
-								<a href="leaveBill_delete?(id=${leaveBill.id})" >删除</a>
-								<a href="workflow_start_process(id=${leaveBill.id})" >申请请假</a>
+				        		<a th:href="@{leaveBill_input(id=${leaveBill.id})}">修改</a>
+								<a th:href="@{leaveBill_delete?(id=${leaveBill.id})}" >删除</a>
+								<a th:href="@{workflow_start_process(id=${leaveBill.id})}" >申请请假</a>
 				        	</span>
 				        	<span th:case="'1'">
-				        		<a href="workflow_viewHisComment(id=${leaveBill.id})" >查看审核记录</a>
+				        		<a th:href="@{workflow_viewHisComment(id=${leaveBill.id})}" >查看审核记录</a>
 				        	</span>
 				        	<span th:case="*">
-				        		<a href="leaveBill_delete(id=${leaveBill.id})" >删除</a>
-			 					<a href="workflow_viewHisComment(id=${leaveBill.id})>" >查看审核记录</a>
+				        		<a th:href="@{leaveBill_delete(id=${leaveBill.id})}" >删除</a>
+			 					<a th:href="@{workflow_viewHisComment(id=${leaveBill.id})}" >查看审核记录</a>
 				        	</span>
 						</div></td>
 				    </tr> 

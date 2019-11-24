@@ -34,6 +34,9 @@ public class LeaveBill extends AbstractPersistable<Integer> {
 	@NotNull(message = "雇员不能为空")
 	private Employee employee;
 	
+	public void setId(Integer id) {
+		super.setId(id);
+	}
 	// 备注
 	private String remark;
 	

@@ -4,7 +4,7 @@
 <title>请假管理</title>
 </head>
 <body>
- 	<form th:action="@{leaveBill_save}" method="POST">
+ 	<form th:action="@{leaveBill_save}" th:object="${leaveBill}" method="POST">
  		<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
 		  <tr>
 		    <td height="30"><table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -31,11 +31,11 @@
 		  <tr>
 		    <td>
 		    	<div align="left" class="STYLE21">
-		    		<input type="hidden" th:field="${leaveBill.id}">
-		    		<input type="hidden" th:field="${leaveBill.employee.id}">
-			 		请假天数:<input th:field="${leaveBill.days}" style="width: 200px;"/><br/>
-			 		请假原因:<textarea rows="10" cols="100" th:field="${leaveBill.content}" ></textarea><br/>
-			 		备&emsp;&emsp;注:<textarea rows="10" cols="100" th:field="${leaveBill.remark}"></textarea><br/>
+		    		<input type="hidden"  th:field="*{id}">
+		    		<input type="hidden"  th:field="*{employee.id}">
+			 		请假天数:<input th:field="*{days}" style="width: 200px;"/><br/>
+			 		请假原因:<textarea rows="10" cols="100" th:field="*{content}" ></textarea><br/>
+			 		备&emsp;&emsp;注:<textarea rows="10" cols="100" th:field="*{remark}"></textarea><br/>
 			 		<input type="submit" value="提交" class="button_ok"/>
 				</div>
 		    </td>

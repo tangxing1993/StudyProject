@@ -49,8 +49,13 @@ public class LeaveBillController {
 	 * @return
 	 */
 	@GetMapping("leaveBill_input")
-	public ModelAndView inputView(ModelAndView mv) {
-		LeaveBill leaveBill = new LeaveBill();
+	public ModelAndView inputView(Integer id,ModelAndView mv) {
+		LeaveBill leaveBill = null;
+		if(id == null) {
+			leaveBill = new LeaveBill();
+		}else {
+			leaveBill = leaveBillService.findById(id).get();
+		}
 		mv.addObject("leaveBill", leaveBill);
 		mv.setViewName("views/leaveBill/input.html");
 		return mv;
@@ -64,8 +69,10 @@ public class LeaveBillController {
 	 */
 	@PostMapping("leaveBill_save")
 	public String leaveBillSave(LeaveBill leaveBill) {
-		Optional<Employee> optional = employeeService.getOneByName(SessionContext.getLoginUserName());
-		leaveBill.setEmployee(optional.get());
+		if(leaveBill.getId() == null) {
+			Optional<Employee> optional = employeeService.getOneByName(SessionContext.getLoginUserName());
+			leaveBill.setEmployee(optional.get());
+		}
 		leaveBillService.save(leaveBill);
 		return "redirect:/leaveBill_list";
 	}
@@ -77,8 +84,8 @@ public class LeaveBillController {
 	 * @return
 	 */
 	@GetMapping("leaveBill_delete")
-	public String delete() {
-		
+	public String delete(LeaveBill leaveBill) {
+		leaveBillService.delete(leaveBill);
 		return "redirect:/leaveBill_list";
 	}
 	

@@ -9,16 +9,21 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.tang.activiti.demo.controller.form.Workflow;
+import org.tang.activiti.demo.domain.LeaveBill;
 import org.tang.activiti.demo.service.WorkflowService;
+import org.tang.activiti.demo.util.SessionContext;
 
 /**
  * 
@@ -62,9 +67,12 @@ public class WorkFlowController {
 	 * @return
 	 */
 	@GetMapping("workflow_task_list")
-	public String taskListView() {
-		
-		return "views/workflow/task.html";
+	public ModelAndView taskListView(ModelAndView mv) {
+		String loginUserName = SessionContext.getLoginUserName();
+		List<Task> tasks = workflowService.listTaskByUserName(loginUserName);
+		mv.addObject("tasks", tasks);
+		mv.setViewName("views/workflow/task.html");
+		return mv;
 	}
 	
 	/**
@@ -73,8 +81,12 @@ public class WorkFlowController {
 	 * @desc <p> 查看任务视图 </p>
 	 */
 	@GetMapping("workflow_task_form")
-	public String taskFormView() {
-		
+	public String taskFormView(String taskId, Model model) {
+		LeaveBill leaveBill =  workflowService.findLeaveBillByTaskId(taskId);
+		List<String> flows = workflowService.findFlowSequenceByTaskId(taskId);
+		model.addAttribute("leaveBill", leaveBill);
+		model.addAttribute("workflow", new Workflow());
+		model.addAttribute("flows", flows);
 		return "views/workflow/taskForm.html";
 	}
 	
@@ -113,8 +125,8 @@ public class WorkFlowController {
 	 * @return
 	 */
 	@GetMapping("workflow_start_process")
-	public String workFlowStartProcess() {
-		
+	public String workFlowStartProcess(@RequestParam(name="id") Integer leaveBillId) {
+		workflowService.startLeaveBillProcess(leaveBillId);
 		return "redirect:/leaveBill_list";
 	}	
 	
