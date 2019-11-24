@@ -38,7 +38,7 @@ public class LeaveBill extends AbstractPersistable<Integer> {
 	private String remark;
 	
 	// 请假状态
-	private Integer state;
+	private Integer state = STATE_NEW;
 	
 	// 录入
 	public static final Integer STATE_NEW = 0;
