@@ -1,6 +1,7 @@
 package org.tang.activiti.demo.service.impl;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,9 @@ import java.util.zip.ZipInputStream;
 
 import javax.transaction.Transactional;
 
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.FlowNode;
+import org.activiti.bpmn.model.SequenceFlow;
 import org.activiti.engine.FormService;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
@@ -16,10 +20,13 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Comment;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.tang.activiti.demo.domain.LeaveBill;
 import org.tang.activiti.demo.service.LeaveBillService;
 import org.tang.activiti.demo.service.WorkflowService;
@@ -127,21 +134,62 @@ public class WorkflowServiceImpl implements WorkflowService {
 		return leaveBillServcie.findById(Integer.parseInt(leaveBillId)).get();
 	}
 
+	/**
+	 *  * 获取当前激活节点的后续连线
+	 *  	- 获取当前的任务节点
+	 *  	- 根据任务节点获取当前的执行器
+	 *  	- 由执行器获取当前激活的活动节点标识
+	 *  	- 获取Bpm定义图并根据活动节点找到当前的活动元素对象
+	 *  	- 获取任务的输出连线
+	 */
 	@Override
 	public List<String> findFlowSequenceByTaskId(String taskId) {
+		List<String> flows = new ArrayList<>();
 		Task task = taskService.createTaskQuery()
 				   .taskId(taskId)
 				   .singleResult();
-		String processInstanceId = task.getProcessInstanceId();
-		ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
-					  .processInstanceId(processInstanceId)
+		String executionId = task.getExecutionId();
+		Execution execution = runtimeService.createExecutionQuery()
+					  .executionId(executionId)
 					  .singleResult();
-		String activityId = processInstance.getActivityId();
 		String processDefinitionId = task.getProcessDefinitionId();
 		// TODO 获取当前任务节点的连接线属性
-		//repositoryService.getProcessDiagramLayout(processDefinitionId)
-		
-		return null;
+		BpmnModel bpmnModel = repositoryService.getBpmnModel(processDefinitionId);
+		// 获取当前激活流程的节点
+		FlowNode flowElement = (FlowNode) bpmnModel.getFlowElement(execution.getActivityId());
+		List<SequenceFlow> sequenceFlows = flowElement.getOutgoingFlows();
+		for(SequenceFlow sequenceFlow : sequenceFlows) {
+			String name = "批准";
+			if(!StringUtils.isEmpty(sequenceFlow.getName())) {
+				name = sequenceFlow.getName();
+			}
+			flows.add(name);
+		}
+		return flows;
+	}
+
+	@Override
+	public void saveProcessTask(String taskId, String outcome,String content) {
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		// 添加批注
+		taskService.addComment(taskId, task.getProcessInstanceId(), content);
+		// 完成任务
+		Map<String, Object> variables = new HashMap<>();
+		variables.put("outcome", outcome);
+		taskService.complete(taskId, variables);
+		// 任务流程完毕后设置状态
+		ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult();
+		if(processInstance == null) {
+			LeaveBill leaveBill = findLeaveBillByTaskId(taskId);
+			leaveBill.setState(LeaveBill.STATE_COMPLETE);
+			leaveBillServcie.save(leaveBill);
+		}
+	}
+
+	@Override
+	public List<Comment> listLeaveComment(String taskId) {
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		return taskService.getProcessInstanceComments(task.getProcessInstanceId());
 	}
 	
 }

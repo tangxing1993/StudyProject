@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.task.Comment;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -84,11 +85,25 @@ public class WorkFlowController {
 	public String taskFormView(String taskId, Model model) {
 		LeaveBill leaveBill =  workflowService.findLeaveBillByTaskId(taskId);
 		List<String> flows = workflowService.findFlowSequenceByTaskId(taskId);
+		List<Comment> comments =  workflowService.listLeaveComment(taskId);
+		Workflow workflow = new Workflow();
+		workflow.setTaskId(taskId);
 		model.addAttribute("leaveBill", leaveBill);
-		model.addAttribute("workflow", new Workflow());
+		model.addAttribute("workflow", workflow);
 		model.addAttribute("flows", flows);
+		model.addAttribute("comments", comments);
 		return "views/workflow/taskForm.html";
 	}
+	
+	@RequestMapping("workflow_submit_task")
+	public String workflow_submit_task(Workflow workflow) {
+		String taskId  = workflow.getTaskId();
+		String outcome = workflow.getOutcome();
+		String content = workflow.getContent();
+		workflowService.saveProcessTask(taskId,outcome,content);
+		return "redirect:/workflow_task_list";
+	}
+	
 	
 	/**
 	 * 

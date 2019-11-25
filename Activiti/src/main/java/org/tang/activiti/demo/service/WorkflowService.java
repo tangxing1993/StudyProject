@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.task.Comment;
 import org.activiti.engine.task.Task;
 import org.tang.activiti.demo.domain.LeaveBill;
 
@@ -82,5 +83,21 @@ public interface WorkflowService {
 	 * @return
 	 */
 	List<String> findFlowSequenceByTaskId(String taskId);
+	/**
+	 * 
+	 * @date 2019年11月25日
+	 * @desc <p> 提交流程任务 </p>
+	 * @param taskId
+	 * @param outcome
+	 */
+	void saveProcessTask(String taskId, String outcome, String content);
+	/**
+	 * 
+	 * @date 2019年11月25日
+	 * @desc <p>获取历史批注</p>
+	 * @param taskId
+	 * @return
+	 */
+	List<Comment> listLeaveComment(String taskId);
 	
 }
