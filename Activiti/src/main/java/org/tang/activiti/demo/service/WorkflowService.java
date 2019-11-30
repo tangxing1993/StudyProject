@@ -3,6 +3,7 @@ package org.tang.activiti.demo.service;
 import java.io.InputStream;
 import java.util.List;
 
+import org.activiti.bpmn.model.GraphicInfo;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Comment;
@@ -99,5 +100,30 @@ public interface WorkflowService {
 	 * @return
 	 */
 	List<Comment> listLeaveComment(String taskId);
+	/**
+	 * 
+	 * @date 2019年11月30日
+	 * @desc <p> 获取业务的历史任务注释 </p>
+	 * @param leaveBillId 业务Id
+	 * @param classType   业务类型
+	 * @return
+	 */
+	List<Comment> getHistoricCommentByBussinessId(Integer leaveBillId, Class<LeaveBill> classType);
+	/**
+	 * 
+	 * @date 2019年11月30日
+	 * @desc <p> 通过任务Id获取流程定义 </p>
+	 * @param taskId
+	 * @return
+	 */
+	ProcessDefinition getProcessDefinitionByTaskId(String taskId);
+	/**
+	 * 
+	 * @date 2019年11月30日
+	 * @desc <p> 获取当前执行任务的位置 </p>
+	 * @param taskId
+	 * @return
+	 */
+	GraphicInfo getProcessPositionByTaskId(String taskId);
 	
 }

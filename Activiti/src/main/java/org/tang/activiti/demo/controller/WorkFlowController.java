@@ -3,10 +3,12 @@ package org.tang.activiti.demo.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import org.activiti.bpmn.model.GraphicInfo;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Comment;
@@ -23,6 +25,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.tang.activiti.demo.controller.form.Workflow;
 import org.tang.activiti.demo.domain.LeaveBill;
+import org.tang.activiti.demo.service.LeaveBillService;
 import org.tang.activiti.demo.service.WorkflowService;
 import org.tang.activiti.demo.util.SessionContext;
 
@@ -37,6 +40,8 @@ public class WorkFlowController {
 
 	@Autowired
 	private WorkflowService workflowService;
+	@Autowired
+	private LeaveBillService leaveBillService;
 	
 	/**
 	 * 
@@ -113,23 +118,43 @@ public class WorkFlowController {
 	 * @throws IOException 
 	 */
 	@GetMapping("workflow_viewImage")
-	public void workflowViewImage(String processDefinitionId) throws IOException {
+	public String workflowViewImage(String processDefinitionId,Model model) {
+		model.addAttribute("processDefinitionId", processDefinitionId);
+		return "views/workflow/image.html";
+	}
+	
+	/**
+	 * 
+	 * @date 2019年11月30日
+	 * @desc <p> 流程图的数据流 </p>
+	 * @param processDefinitionId
+	 * @throws IOException
+	 */
+	@RequestMapping("workflow_image")
+	public void wlokflowImage(String processDefinitionId) throws IOException {
 		InputStream	inputStream = workflowService.getProcessDefinitionInputStream(processDefinitionId);
 		HttpServletResponse response = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getResponse();
 		ServletOutputStream outputStream = response.getOutputStream();
 		StreamUtils.copy(inputStream, outputStream);
-		// return "views/workflow/image.html";
 	}
 	
 	/**
 	 * 
 	 * @date 2019年11月20日
-	 * @desc <p> 浏览历史审核记录 </p>
+	 * @desc 
+	 * <p>
+	 *    浏览历史审核记录 
+	 *    请假表单信息 
+	 *    任务的处理意见信息 
+	 * </p>
 	 * @return
 	 */
 	@GetMapping("workflow_viewHisComment")
-	public String hisCommentView() {
-		
+	public String hisCommentView(@RequestParam("id") Integer leaveBillId,Model model) {
+		Optional<LeaveBill> optional = leaveBillService.findById(leaveBillId);
+		model.addAttribute("leaveBill", optional.get());
+		List<Comment> comments =  workflowService.getHistoricCommentByBussinessId(leaveBillId,LeaveBill.class);
+		model.addAttribute("comments", comments);
 		return "views/workflow/taskFormHis.html";
 	}
 	
@@ -157,6 +182,21 @@ public class WorkFlowController {
 	public String upload(Workflow workflow) throws IOException {
 		workflowService.deployProcess(workflow.getImageName(),workflow.getFile().getInputStream());
 		return "redirect:/workflow_deploy_home";
+	}
+	
+	/**
+	 * 
+	 * @date 2019年11月30日
+	 * @desc <p> 查看当前流程图执行位置 </p>
+	 * @param taskId
+	 * @return
+	 */
+	@RequestMapping("workflow_task_cur_image")
+	public String workflow_task_cur_image(String taskId,Model model) {
+		ProcessDefinition pd =	workflowService.getProcessDefinitionByTaskId(taskId);
+		GraphicInfo position =  workflowService.getProcessPositionByTaskId(taskId);
+		model.addAttribute("position", position);
+		return "forward:/workflow_viewImage?processDefinitionId=" + pd.getId();
 	}
 	
 }	

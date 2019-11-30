@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.FlowNode;
+import org.activiti.bpmn.model.GraphicInfo;
 import org.activiti.bpmn.model.SequenceFlow;
 import org.activiti.engine.FormService;
 import org.activiti.engine.HistoryService;
@@ -18,6 +19,7 @@ import org.activiti.engine.IdentityService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.Execution;
@@ -153,7 +155,6 @@ public class WorkflowServiceImpl implements WorkflowService {
 					  .executionId(executionId)
 					  .singleResult();
 		String processDefinitionId = task.getProcessDefinitionId();
-		// TODO 获取当前任务节点的连接线属性
 		BpmnModel bpmnModel = repositoryService.getBpmnModel(processDefinitionId);
 		// 获取当前激活流程的节点
 		FlowNode flowElement = (FlowNode) bpmnModel.getFlowElement(execution.getActivityId());
@@ -190,6 +191,34 @@ public class WorkflowServiceImpl implements WorkflowService {
 	public List<Comment> listLeaveComment(String taskId) {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		return taskService.getProcessInstanceComments(task.getProcessInstanceId());
+	}
+
+	@Override
+	public List<Comment> getHistoricCommentByBussinessId(Integer leaveBillId, Class<LeaveBill> classType) {
+		String processInstanceBusinessKey = classType.getSimpleName() + BUSSINESS_KEY_SPLIT + leaveBillId;
+		HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
+					  .processInstanceBusinessKey(processInstanceBusinessKey)
+					  .singleResult();
+		List<Comment> comments = taskService.getProcessInstanceComments(historicProcessInstance.getId());
+		return comments;
+	}
+
+	@Override
+	public ProcessDefinition getProcessDefinitionByTaskId(String taskId) {
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		String processDefinitionId = task.getProcessDefinitionId();
+		ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionId(processDefinitionId).singleResult();
+		return processDefinition;
+	}
+
+	@Override
+	public GraphicInfo getProcessPositionByTaskId(String taskId) {
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		BpmnModel bpmnModel = repositoryService.getBpmnModel(task.getProcessDefinitionId());
+		String executionId = task.getExecutionId();
+		Execution execution = runtimeService.createExecutionQuery().executionId(executionId).singleResult();
+		GraphicInfo graphicInfo = bpmnModel.getLocationMap().get(execution.getActivityId());
+		return graphicInfo;
 	}
 	
 }
