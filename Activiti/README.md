@@ -19,3 +19,16 @@ Configuring Eclipse or
 	* 点击Window -> Perferences -> Activiti -> Save Action -> 勾选 Create process  definition image when saving the diagram
 
 * 测试程序使用默认的配置类来创建ProcessEngine,配置见 AbstractProcessTest 类
+
+**__测试案例__**
+
+	参考项目的测试包中的案例
+
+**__测试项目__**
+
+
+* 项目启动
+	
+	- 进入项目根目录 执行 mvn clean spring-boot:run
+    - 访问数据库: http://localhost:8080/h2-console
+	- 访问应用: http://localhost:8080/login

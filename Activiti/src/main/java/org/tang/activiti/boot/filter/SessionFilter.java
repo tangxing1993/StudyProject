@@ -29,7 +29,7 @@ public class SessionFilter extends HttpFilter{
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 			String url = ((HttpServletRequest)request).getRequestURI();
-			if(!"/login".equals(url) && !url.contains("/lib/")) {
+			if(!"/login".equals(url) && !url.contains("/lib/") && !url.contains("/h2-console")) {
 				String loginUserName = SessionContext.getLoginUserName();
 				if(StringUtils.isEmpty(loginUserName)) {
 					((HttpServletResponse)response).sendRedirect("/login");
