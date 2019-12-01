@@ -24,5 +24,6 @@
 		<module>ElasticSearch</module>
 		<module>Activiti</module>
 		<module>DesignPattern</module>
+		<module>ActivitiOA</module>
 	</modules>
 </project>
