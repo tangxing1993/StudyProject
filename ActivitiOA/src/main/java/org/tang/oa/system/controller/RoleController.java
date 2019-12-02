@@ -1,13 +1,19 @@
 package org.tang.oa.system.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.tang.oa.base.controller.BaseController;
+import org.tang.oa.system.domin.Privilege;
 import org.tang.oa.system.domin.Role;
 
 /**
@@ -66,4 +72,45 @@ public class RoleController extends BaseController {
 		return "redirect:list";
 	}
 
+	/**
+	 * 
+	 * @date 2019年12月2日
+	 * @desc <p> 设置权限页面 </p>
+	 * @return
+	 */
+	@RequestMapping("editPrivilegeUI")
+	public String editPrivilegeUI(@NonNull Long roleId, Model model) {
+		// 权限列表数据
+		List<Privilege> privileges = privilegeService.findAll();
+		model.addAttribute("roleId", roleId);
+		model.addAttribute("privileges", privileges);
+		Role role = roleService.findById(roleId);
+		// 当前角色对应的权限
+		Set<Privilege> curRolePrivileges = role.getPrivileges();
+		if(curRolePrivileges != null ) {
+			List<Long> privilegeIds = new ArrayList<>(curRolePrivileges.size());
+			for(Privilege privilege : curRolePrivileges) {
+				privilegeIds.add(privilege.getId());
+			}
+			model.addAttribute("privilegeIds", privilegeIds);
+		}
+		return "/view/system/role/setPrivilegeUI.html";
+	}
+	
+	/**
+	 * 
+	 * @date 2019年12月2日
+	 * @desc <p> 保存权限 </p>
+	 * @return
+	 */
+	@RequestMapping("savePrivilege")
+	public String savePrivilege(Long roleId,Long[] privilegeIds) {
+		Role curRole = roleService.findById(roleId);
+		List<Privilege> privileges = privilegeService.findAllById(Arrays.asList(privilegeIds));
+		curRole.setPrivileges(new HashSet<>(privileges));
+		roleService.save(curRole);
+		return "redirect:list";
+	}
+	
+	
 }
