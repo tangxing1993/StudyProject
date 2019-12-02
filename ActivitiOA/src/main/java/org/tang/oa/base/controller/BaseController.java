@@ -6,6 +6,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.core.env.Environment;
 import org.tang.oa.system.service.DepartmentService;
+import org.tang.oa.system.service.PrivilegeService;
 import org.tang.oa.system.service.RoleService;
 import org.tang.oa.system.service.UserService;
 
@@ -29,6 +30,9 @@ public abstract class BaseController implements MessageSourceAware,EnvironmentAw
 	
 	@Autowired
 	protected UserService userService;
+	
+	@Autowired
+	protected PrivilegeService privilegeService;
 	
 	@Override
 	public void setMessageSource(MessageSource messageSource) {
