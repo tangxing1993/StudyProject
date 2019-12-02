@@ -39,4 +39,15 @@ public class Role extends BaseEntity {
 	    )
 	private Set<User> users = new HashSet<>();
 	
+	// 角色拥有的权限
+	@ManyToMany
+	@JoinTable(
+			name = "OA_ROLE_PRIVILEGE",
+			joinColumns = 
+				@JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"),
+			inverseJoinColumns = 
+				@JoinColumn(name = "PRIVILEGE_ID", referencedColumnName = "ID")
+			)
+	private Set<Privilege> privileges = new HashSet<>();
+	
 }
