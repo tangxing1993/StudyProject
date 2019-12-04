@@ -10,5 +10,15 @@ import org.tang.oa.system.domin.User;
  * @desc   <p>岗位的业务接口</p>
  */
 public interface UserService extends BaseService<User>{
+	
+	/**
+	 * 
+	 * @date 2019年12月4日
+	 * @desc <p> 根据登录名和密码查询用户 </p>
+	 * @param loginName
+	 * @param password
+	 * @return
+	 */
+	User findByLoginNameAndPassword(String loginName, String password);
 
 }

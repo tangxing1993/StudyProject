@@ -1,0 +1,34 @@
+<html>
+<head>
+<title>导航菜单</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script language="JavaScript" src="script/jquery.js"></script>
+<script language="JavaScript" src="script/menu.js"></script>
+<link type="text/css" rel="stylesheet" href="style/blue/menu.css" />
+</head>
+<body style="margin: 0">
+<div id="Menu">
+    <ul id="MenuUl">
+        <li class="level1">
+            <div onClick="menuClick(this);" class="level1Style"><img src="style/images/MenuIcon/FUNC20082.gif" class="Icon" /> 系统管理</div>
+            <ul style="display: none;" class="MenuLevel2">
+                <li class="level2">
+                    <div class="level2Style"><img src="style/images/MenuIcon/menu_arrow_single.gif" /> <a target="right" href="System_Role/list.html"> 岗位管理</a></div>
+                </li>
+                <li class="level2">
+                    <div class="level2Style"><img src="style/images/MenuIcon/menu_arrow_single.gif" /> <a target="right" href="System_Department/list.html"> 部门管理</a></div>
+                </li>
+                <li class="level2">
+                    <div class="level2Style"><img src="style/images/MenuIcon/menu_arrow_single.gif" /> <a target="right" href="System_User/list.html"> 用户管理</a></div>
+                </li>
+                <!--
+                <li class="level2">
+                    <div class="level2Style"><img src="style/images/MenuIcon/menu_arrow_single.gif" /> 基础数据设置</div>
+                </li>
+                -->
+            </ul>
+        </li>
+    </ul>
+</div>
+</body>
+</html>
