@@ -9,7 +9,7 @@
 	cd ${project_home}
 	mvn clean spring-boot:run
 	访问数据库: http://localhost/oa/h2-console   sa/123456
-	访问应用: http://localhost/oa
+	访问应用: http://localhost/oa   admin/1234
 	
 **__项目模块__**
 

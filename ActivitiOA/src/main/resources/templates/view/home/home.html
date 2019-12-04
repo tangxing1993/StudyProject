@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+<title>Activiti OA</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script  th:src="@{script/jquery.js}"></script>
+<script  th:src="@{script/menu.js}"></script>
+<link type="text/css" rel="stylesheet" th:href="@{style/blue/menu.css}" />
+<link type="text/css" rel="stylesheet" th:href="@{style/blue/top.css}" />
+<link type="text/css" rel="stylesheet" th:href="@{style/blue/statusbar.css}" />
+</head>
+<body style="margin:0">
+	<div th:replace="/view/home/top :: top">Header</div>
+    <div>
+    	<div th:replace="/view/home/left :: left">left</div>
+    	<div layout:fragment="content">content</div>
+    </div>
+    
+    <div th:replace="/view/home/bottom :: bottom">bottom</div>
+</body>
+</html>
