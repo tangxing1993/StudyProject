@@ -29,6 +29,10 @@ public class OAInitListener implements ServletContextListener {
 		List<Privilege> topPrivilegeList = perivilegeService.listForTopPrivilege();
 		sce.getServletContext().setAttribute("topPrivilegeList", topPrivilegeList);
 		log.info("=============== 权限数据缓存成功 =================");
+		// 缓存所有的权限URl
+		List<String> allPrivilegeUrl = perivilegeService.getAllPrivilegeUrl();
+		sce.getServletContext().setAttribute("allPrivilegeUrl", allPrivilegeUrl);
+		log.info("=============== 权限URL缓存成功 =================");
 	}
 
 	

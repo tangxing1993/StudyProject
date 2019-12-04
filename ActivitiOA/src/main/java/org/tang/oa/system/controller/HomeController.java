@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.tang.oa.base.controller.BaseController;
 import org.tang.oa.system.domin.User;
+import org.tang.oa.util.SessionContext;
 
 /**
  * 
@@ -37,13 +38,13 @@ public class HomeController extends BaseController{
 	 * @return
 	 */
 	@RequestMapping("/login")
-	public String login(@NonNull String loginName,@NonNull String password,Model model,HttpServletRequest request) {
+	public String login(@NonNull String loginName,@NonNull String password,Model model) {
 		User user =  userService.findByLoginNameAndPassword(loginName,password);
 		if(user == null) {
 			model.addAttribute("errorMsg", "用户名或者密码错误");
 			return "forward:loginUI";
 		}
-		request.getSession().setAttribute("loginUser", user);
+		SessionContext.saveLoginUser(user);
 		return "redirect:/indexUI";
 	}
 	
@@ -84,6 +85,17 @@ public class HomeController extends BaseController{
 	@RequestMapping("/bottomUI")
 	public String bottomUI() {
 		return "/view/home/bottom.html";
+	}
+	
+	/**
+	 * 
+	 * @date 2019年12月11日
+	 * @desc <p> 无权限页面 </p>
+	 * @return
+	 */
+	@RequestMapping("/noPrivilegeUI")
+	public String noPrivilegeUI() {
+		return "/view/home/noPrivilege.html";
 	}
 	
 }
