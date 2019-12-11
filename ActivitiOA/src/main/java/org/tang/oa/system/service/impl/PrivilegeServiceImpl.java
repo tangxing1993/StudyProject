@@ -21,4 +21,9 @@ public class PrivilegeServiceImpl extends BaseServiceImpl<Privilege, PrivilegeRe
 		return dao.listForTopPrivilege();
 	}
 
+	@Override
+	public List<String> getAllPrivilegeUrl() {
+		return dao.getAllPrivilegeUrl();
+	}
+
 }

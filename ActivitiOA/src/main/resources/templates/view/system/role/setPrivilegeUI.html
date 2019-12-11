@@ -42,6 +42,17 @@
     	
     	$(function(){
     		$("#tree").treeview();
+    		
+    		// 设置树的选中状态
+    		$("[name='privilegeIds']").click(function(){
+    			// 选中当前节点的所有子节点
+    			$(this).siblings("ul").find("input").attr("checked",this.checked);
+				// 如果当前节点选中则选中父节点
+				if(this.checked){
+					$(this).parents("li").children("input").attr("checked", true);
+				}
+    		});
+    		
     	});
     </script>
 </head>
@@ -96,11 +107,11 @@
 										<label th:for="${'ck_' + topPrivilege.id}"><span class='folder' th:id='${topPrivilege.id}'>[[${ topPrivilege.name }]]</span></label>
 										<ul>
 											<li th:each=" secondPrivilege : ${topPrivilege.children} " th:id="${'ck_' + secondPrivilege.id}" >
-												<input type='checkbox' name="privilegeIds" th:id='${secondPrivilege.id}' th:checked=" ${privilegeIds.contains(secondPrivilege.id)} " />
+												<input type='checkbox' name="privilegeIds" th:id='${secondPrivilege.id}' th:checked=" ${privilegeIds.contains(secondPrivilege.id)} "   />
 												<label th:for="${'ck_' + secondPrivilege.id}"><span class='folder' th:id='${secondPrivilege.id}'>[[${ secondPrivilege.name }]]</span></label>
 												<ul>
 													<li th:each=" threePrivilege : ${secondPrivilege.children} " th:id="${'ck_' + threePrivilege.id}" >
-														<input type='checkbox' name="privilegeIds" th:id='${threePrivilege.id}' th:checked=" ${privilegeIds.contains(threePrivilege.id)} " />
+														<input type='checkbox' name="privilegeIds" th:id='${threePrivilege.id}' th:checked=" ${privilegeIds.contains(threePrivilege.id)} "  />
 														<label th:for="${'ck_' + threePrivilege.id}"><span class='folder' th:id='${threePrivilege.id}'>[[${ threePrivilege.name }]]</span></label>
 													</li>
 												</ul>

@@ -21,5 +21,14 @@ public interface PrivilegeRepository extends BaseRepository<Privilege, Long> {
 	 */
 	@Query("FROM Privilege WHERE parent IS NULL ")
 	List<Privilege> listForTopPrivilege();
+	
+	/**
+	 * 
+	 * @date 2019年12月11日
+	 * @desc <p> 获取所有的权限URL </p>
+	 * @return
+	 */
+	@Query(" SELECT DISTINCT p.url FROM Privilege p WHERE p.parent IS NOT NULL ")
+	List<String> getAllPrivilegeUrl();
 
 }

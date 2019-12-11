@@ -64,7 +64,7 @@ public class User extends BaseEntity {
 		// 判断普通用户是否具有当前权限
 		for(Role role : roles) {
 			for( Privilege privilege : role.getPrivileges() ) {
-				if(privilege.getName().equals(privilegeName)) {
+				if(privilegeName.equals(privilege.getName())) {
 					return true;
 				}
 			}
@@ -81,6 +81,29 @@ public class User extends BaseEntity {
 	 */
 	private boolean isAdmin() {
 		return "admin".equals(loginName);
+	}
+	
+	/**
+	 * 
+	 * @date 2019年12月11日
+	 * @desc <p> 判断用户是否有当前地址的权限 </p>
+	 * @param privilegeUrl
+	 * @return
+	 */
+	public boolean hasPrivilege(String privilegeUrl) {
+		// 判断是否是超级管理员用户
+		if(isAdmin()) {
+			return true;
+		}
+		// 判断普通用户是否具有当前权限
+		for(Role role : roles) {
+			for( Privilege privilege : role.getPrivileges() ) {
+				if(privilegeUrl.equals(privilege.getUrl())) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 }

@@ -19,5 +19,11 @@ public interface PrivilegeService extends BaseService<Privilege> {
 	 * @return
 	 */
 	List<Privilege> listForTopPrivilege();
-
+	/**
+	 * 
+	 * @date 2019年12月11日
+	 * @desc <p> 获取所有权限的URl </p>
+	 * @return
+	 */
+	List<String> getAllPrivilegeUrl();
 }
