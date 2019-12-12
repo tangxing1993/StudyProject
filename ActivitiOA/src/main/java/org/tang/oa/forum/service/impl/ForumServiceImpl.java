@@ -13,9 +13,42 @@ import org.tang.oa.forum.service.ForumService;
  */
 @Service
 public class ForumServiceImpl extends BaseServiceImpl<Forum, ForumRepository> implements ForumService {
+	
+	@Override
+	public void save(Forum entity) {
+		if(entity.getId() == null) {
+			super.save(entity);
+			entity.setPosition(entity.getId().intValue());
+		}else {
+			super.save(entity);
+		}
+	}
 
-	
-	
-	
+	/**
+	 *  -  交换上下的版块位置
+	 */
+	@Override
+	public void moveUp(Long id) {
+		Forum forum = dao.findById(id).get();
+		Forum preForum = dao.getPreForum(forum.getPosition());
+		if(preForum == null) {
+			return;
+		}
+		int tmpPosition = forum.getPosition();
+		forum.setPosition(preForum.getPosition());
+		preForum.setPosition(tmpPosition);
+	}
+
+	@Override
+	public void moveDown(Long id) {
+		Forum forum = dao.findById(id).get();
+		Forum nextForum = dao.getNextForum(forum.getPosition());
+		if(nextForum == null) {
+			return;
+		}
+		int tmpPosition = forum.getPosition();
+		forum.setPosition(nextForum.getPosition());
+		nextForum.setPosition(tmpPosition);
+	}
 
 }

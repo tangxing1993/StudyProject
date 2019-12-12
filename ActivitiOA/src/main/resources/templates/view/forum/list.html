@@ -31,14 +31,16 @@
         </thead>
 
 		<!--显示数据列表-->
-        <tbody id="TableData" class="dataContainer" datakey="forumList" th:each=" forum : ${forumList} ">
+        <tbody id="TableData" class="dataContainer" datakey="forumList" th:each=" forum,forumStat : ${forumList} ">
 			<tr class="TableDetail1 template">
 				<td>[[${forum.name}]]&nbsp;</td>
 				<td>[[${forum.description}]]&nbsp;</td>
 				<td><a onClick="return delConfirm()" th:href="@{/forum/delete(id=${forum.id})}">删除</a>
 					<a th:href="@{/forum/editUI(id=${forum.id})}">修改</a>
-					<a th:href="@{/forum/moveUp(id=${forum.id})}">上移</a>
-					<a th:href="@{/forum/moveDown(id=${forum.id})}">下移</a>
+					<a href="javascript:void(0);" th:if="${forumStat.count == 1}">上移</a>
+					<a th:href="@{/forum/moveUp(id=${forum.id})}" th:if="${forumStat.count > 1} ">上移 </a>
+					<a href="javascript:void(0);" th:if="${forumStat.count == forumStat.size}">下移</a>
+					<a th:href="@{/forum/moveDown(id=${forum.id})}" th:if="${forumStat.count != forumStat.size}">下移</a>
 				</td>
 			</tr>
         </tbody>

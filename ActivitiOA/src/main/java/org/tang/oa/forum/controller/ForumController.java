@@ -1,7 +1,8 @@
 package org.tang.oa.forum.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,8 +26,8 @@ public class ForumController extends BaseController {
 	 */
 	@RequestMapping("list")
 	public String list(Model model) {
-		List<Forum> forumList = forumService.findAll();
-		model.addAttribute("forumList", forumList);
+		Page<Forum> page = forumService.findAll(PageRequest.of(0, 1000, Sort.by("position").ascending()));
+		model.addAttribute("forumList", page.getContent());
 		return "/view/forum/list.html";
 	}
 	
@@ -98,8 +99,8 @@ public class ForumController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("moveUp")
-	public String moveUp() {
-		
+	public String moveUp(Long id) {
+		forumService.moveUp(id);
 		return "redirect:list";
 	}
 	
@@ -110,8 +111,8 @@ public class ForumController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("moveDown")
-	public String moveDown() {
-		
+	public String moveDown(Long id) {
+		forumService.moveDown(id);
 		return "redirect:list";
 	}
 	
