@@ -82,9 +82,9 @@ public class RoleController extends BaseController {
 	public String editPrivilegeUI(@NonNull Long roleId, Model model) {
 		// 权限列表数据
 		List<Privilege> privileges = privilegeService.findAll();
-		model.addAttribute("roleId", roleId);
 		model.addAttribute("privileges", privileges);
 		Role role = roleService.findById(roleId);
+		model.addAttribute("role", role);
 		// 当前角色对应的权限
 		Set<Privilege> curRolePrivileges = role.getPrivileges();
 		if(curRolePrivileges != null ) {

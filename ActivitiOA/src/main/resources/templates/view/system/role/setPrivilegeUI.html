@@ -42,6 +42,17 @@
     	
     	$(function(){
     		$("#tree").treeview();
+    		
+    		// 设置树的选中状态
+    		$("[name='privilegeIds']").click(function(){
+    			// 选中当前节点的所有子节点
+    			$(this).siblings("ul").find("input").attr("checked",this.checked);
+				// 如果当前节点选中则选中父节点
+				if(this.checked){
+					$(this).parents("li").children("input").attr("checked", true);
+				}
+    		});
+    		
     	});
     </script>
 </head>
@@ -62,7 +73,7 @@
 <div id=MainArea>
     <form th:action="@{/role/savePrivilege}">
         <div class="ItemBlock_Title1"><!-- 信息说明 --><div class="ItemBlock_Title1">
-        	<img border="0" width="4" height="7" th:src="@{/style/blue/images/item_point.gif}" /> 正在为【部门经理】配置权限 </div> 
+        	<img border="0" width="4" height="7" th:src="@{/style/blue/images/item_point.gif}" /> 正在为【[[${role.name}]]】配置权限 </div> 
         </div>
         
         <!-- 表单内容显示 -->
@@ -73,15 +84,13 @@
 					<thead>
 						<tr align="LEFT" valign="MIDDLE" id="TableTitle">
 							<td width="300px" style="padding-left: 7px;">
-								<input type="hidden" name="roleId" th:value="${roleId}"/>
+								<input type="hidden" name="roleId" th:value="${role.id}"/>
 								<!-- 如果把全选元素的id指定为selectAll，并且有函数selectAll()，就会有错。因为有一种用法：可以直接用id引用元素 -->
 								<!-- <input type="CHECKBOX" id="cbSelectAll" onClick="selectAll(this.checked)"/> -->
 								<input type="CHECKBOX" id="cbSelectAll" onClick="$('[name=\'privilegeIds\']').attr('checked',this.checked)"/>
 								<label for="cbSelectAll">全选</label>
-			                    
-			                    <br/>
-			                    <input type="checkbox" name="privilegeIds" th:checked=" ${privilegeIds.contains(privilege.id)} "  th:each=" privilege : ${privileges} " th:value="${privilege.id}" th:text="${privilege.name}">
-								
+			                  <!--   <br/>
+			                    <input type="checkbox" name="privilegeIds" th:checked=" ${privilegeIds.contains(privilege.id)} "  th:each=" privilege : ${privileges} " th:value="${privilege.id}" th:text="${privilege.name}"> -->
 							</td>
 						</tr>
 					</thead>
@@ -91,6 +100,26 @@
 						<tr class="TableDetail1">
 							<!-- 显示权限树 -->
 							<td>
+								
+								<ul id="tree">
+									<li th:each=" topPrivilege : ${application.topPrivilegeList} " th:id="${'ck_' + topPrivilege.id}" >
+										<input type='checkbox' name="privilegeIds" th:id='${topPrivilege.id}' th:checked=" ${privilegeIds.contains(topPrivilege.id)} " />
+										<label th:for="${'ck_' + topPrivilege.id}"><span class='folder' th:id='${topPrivilege.id}'>[[${ topPrivilege.name }]]</span></label>
+										<ul>
+											<li th:each=" secondPrivilege : ${topPrivilege.children} " th:id="${'ck_' + secondPrivilege.id}" >
+												<input type='checkbox' name="privilegeIds" th:id='${secondPrivilege.id}' th:checked=" ${privilegeIds.contains(secondPrivilege.id)} "   />
+												<label th:for="${'ck_' + secondPrivilege.id}"><span class='folder' th:id='${secondPrivilege.id}'>[[${ secondPrivilege.name }]]</span></label>
+												<ul>
+													<li th:each=" threePrivilege : ${secondPrivilege.children} " th:id="${'ck_' + threePrivilege.id}" >
+														<input type='checkbox' name="privilegeIds" th:id='${threePrivilege.id}' th:checked=" ${privilegeIds.contains(threePrivilege.id)} "  />
+														<label th:for="${'ck_' + threePrivilege.id}"><span class='folder' th:id='${threePrivilege.id}'>[[${ threePrivilege.name }]]</span></label>
+													</li>
+												</ul>
+											</li>
+										</ul>
+									</li>
+								</ul>
+								
 								
 							</td>
 						</tr>

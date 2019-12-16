@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -44,7 +45,7 @@ public class User extends BaseEntity {
 	@JoinColumn(name = "DEPARTMENT_ID",referencedColumnName = "ID")
 	private Department department;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
 	        name="OA_USER_ROLE",
 	        joinColumns=
@@ -54,4 +55,55 @@ public class User extends BaseEntity {
 	    )
 	@EqualsAndHashCode.Exclude
 	private Set<Role> roles = new HashSet<>();
+	
+	public boolean isPrivilege(String privilegeName) {
+		// 判断是否是超级管理员用户
+		if(isAdmin()) {
+			return true;
+		}
+		// 判断普通用户是否具有当前权限
+		for(Role role : roles) {
+			for( Privilege privilege : role.getPrivileges() ) {
+				if(privilegeName.equals(privilege.getName())) {
+					return true;
+				}
+			}
+		}
+		
+		return Boolean.FALSE;
+	}
+	
+	/**
+	 * 
+	 * @date 2019年12月5日
+	 * @desc <p> 判断是否是超级管理员 </p>
+	 * @return
+	 */
+	private boolean isAdmin() {
+		return "admin".equals(loginName);
+	}
+	
+	/**
+	 * 
+	 * @date 2019年12月11日
+	 * @desc <p> 判断用户是否有当前地址的权限 </p>
+	 * @param privilegeUrl
+	 * @return
+	 */
+	public boolean hasPrivilege(String privilegeUrl) {
+		// 判断是否是超级管理员用户
+		if(isAdmin()) {
+			return true;
+		}
+		// 判断普通用户是否具有当前权限
+		for(Role role : roles) {
+			for( Privilege privilege : role.getPrivileges() ) {
+				if(privilegeUrl.equals(privilege.getUrl())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 }
