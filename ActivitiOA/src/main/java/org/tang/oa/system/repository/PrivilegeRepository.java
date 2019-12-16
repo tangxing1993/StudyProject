@@ -1,5 +1,8 @@
 package org.tang.oa.system.repository;
 
+import java.util.List;
+
+import org.springframework.data.jpa.repository.Query;
 import org.tang.oa.base.repository.BaseRepository;
 import org.tang.oa.system.domin.Privilege;
 /**
@@ -9,5 +12,23 @@ import org.tang.oa.system.domin.Privilege;
  * @desc   <p> 权限的数据接口 </p>
  */
 public interface PrivilegeRepository extends BaseRepository<Privilege, Long> {
+
+	/**
+	 * 
+	 * @date 2019年12月4日
+	 * @desc <p> 获取顶级权限列表 </p>
+	 * @return
+	 */
+	@Query("FROM Privilege WHERE parent IS NULL ")
+	List<Privilege> listForTopPrivilege();
+	
+	/**
+	 * 
+	 * @date 2019年12月11日
+	 * @desc <p> 获取所有的权限URL </p>
+	 * @return
+	 */
+	@Query(" SELECT DISTINCT p.url FROM Privilege p WHERE p.parent IS NOT NULL ")
+	List<String> getAllPrivilegeUrl();
 
 }

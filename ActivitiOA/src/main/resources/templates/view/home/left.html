@@ -1,26 +1,24 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
-<div id="Menu" th:fragment="left" style="margin: 0;width: 180px;">
+<html>
+<head>
+<title>导航菜单</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script language="JavaScript" src="script/jquery.js"></script>
+<script language="JavaScript" src="script/menu.js"></script>
+<link type="text/css" rel="stylesheet" href="style/blue/menu.css" />
+</head>
+<body style="margin: 0">
+<div id="Menu">
     <ul id="MenuUl">
-        <li class="level1">
-            <div onClick="menuClick(this);" class="level1Style"><img src="style/images/MenuIcon/FUNC20082.gif" class="Icon" /> 系统管理</div>
-            <ul style="display: none;" class="MenuLevel2">
-                <li class="level2">
-                    <div class="level2Style"><img src="style/images/MenuIcon/menu_arrow_single.gif" /> <a target="right" href="System_Role/list.html"> 岗位管理</a></div>
+    	<!-- 校验用户是否拥有当前权限 -->
+        <li class="level1" th:each=" topPrivilege : ${application.topPrivilegeList} " th:if="${session.loginUser.isPrivilege(topPrivilege.name)}">
+            <div onClick="menuClick(this);" class="level1Style"><img src="style/images/MenuIcon/FUNC20082.gif" class="Icon" /> [[ ${topPrivilege.name} ]]</div>
+            <ul style="display: none;" class="MenuLevel2" >
+                <li class="level2" th:each=" secondPrivilege : ${topPrivilege.children} "  th:if="${session.loginUser.isPrivilege(secondPrivilege.name)}">
+                    <div class="level2Style"><img src="style/images/MenuIcon/menu_arrow_single.gif" /> <a target="right" th:href="@{${secondPrivilege.url}}"> [[${secondPrivilege.name}]]</a></div>
                 </li>
-                <li class="level2">
-                    <div class="level2Style"><img src="style/images/MenuIcon/menu_arrow_single.gif" /> <a target="right" href="System_Department/list.html"> 部门管理</a></div>
-                </li>
-                <li class="level2">
-                    <div class="level2Style"><img src="style/images/MenuIcon/menu_arrow_single.gif" /> <a target="right" href="System_User/list.html"> 用户管理</a></div>
-                </li>
-                <!--
-                <li class="level2">
-                    <div class="level2Style"><img src="style/images/MenuIcon/menu_arrow_single.gif" /> 基础数据设置</div>
-                </li>
-                -->
             </ul>
         </li>
     </ul>
 </div>
+</body>
+</html>

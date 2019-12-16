@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -49,7 +50,7 @@ public class Privilege extends BaseEntity{
 	private Privilege parent;
 	
 	// 子权限
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	@EqualsAndHashCode.Exclude
 	@JoinColumn( name = "PARENT_ID" ,referencedColumnName = "ID")
 	private Set<Privilege> children = new HashSet<>();
